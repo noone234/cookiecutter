@@ -94,8 +94,7 @@ def generate_context(
             'JSON decoding error while loading "{0}".  Decoding'
             ' error details: "{1}"'.format(full_fpath, json_exc_message)
         )
-        logger.critical(our_exc_message)
-        sys.exit(1)
+        sys.exit(our_exc_message)
 
     # Add the Python object to the context dictionary
     file_name = os.path.split(context_file)[1]
