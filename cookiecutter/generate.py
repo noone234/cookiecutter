@@ -13,7 +13,6 @@ from jinja2.exceptions import TemplateSyntaxError, UndefinedError
 
 from cookiecutter.environment import StrictEnvironment
 from cookiecutter.exceptions import (
-    ContextDecodingException,
     FailedHookException,
     NonTemplatedInputDirException,
     OutputDirExistsException,
@@ -86,15 +85,16 @@ def generate_context(
         with open(context_file, encoding='utf-8') as file_handle:
             obj = json.load(file_handle, object_pairs_hook=OrderedDict)
     except ValueError as e:
-        # JSON decoding error.  Let's throw a new exception that is more
+        # JSON decoding error.  Let's log a message that is more
         # friendly for the developer or user.
         full_fpath = os.path.abspath(context_file)
         json_exc_message = str(e)
-        our_exc_message = (
+        our_message = (
             'JSON decoding error while loading "{0}".  Decoding'
             ' error details: "{1}"'.format(full_fpath, json_exc_message)
         )
-        sys.exit(our_exc_message)
+        logger.critical(our_message)
+        sys.exit(1)
 
     # Add the Python object to the context dictionary
     file_name = os.path.split(context_file)[1]
